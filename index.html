@@ -1,0 +1,216 @@
+</script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jogadores para análise - Pedro Oliver</title>
+
+  <style>
+    body{
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 30px;
+    }
+
+    h1{
+      text-align: center;
+    }
+
+    .container{
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    select, input, button{
+      padding: 10px;
+      margin: 10px 0;
+      width: 100%;
+      font-size: 16px;
+    }
+
+    button{
+      cursor: pointer;
+      border: none;
+      background: #222;
+      color: white;
+      border-radius: 5px;
+    }
+
+    button:hover{
+      background: #444;
+    }
+
+    .colunas{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .card{
+      background: #fafafa;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+    }
+
+    .card h2{
+      font-size: 18px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    ul{
+      padding-left: 20px;
+    }
+
+    .mensagem{
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .erro{
+      color: red;
+    }
+
+    .sucesso{
+      color: green;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Gestão de Jogadores</h1>
+
+    <label>Escolha a categoria:</label>
+
+    <select id="categoria">
+      <option value="GOLEIROS">GOLEIROS</option>
+      <option value="ZAGUEIROS">ZAGUEIROS</option>
+      <option value="LATERAIS">LATERAIS</option>
+      <option value="MEIAS">MEIAS</option>
+      <option value="ATACANTES">ATACANTES</option>
+      <option value="TÉCNICO">TÉCNICO</option>
+    </select>
+
+    <label>Digite o nome:</label>
+    <input type="text" id="nome" placeholder="Ex: Neymar" />
+
+    <button onclick="inserirJogador()">Inserir</button>
+
+    <div id="mensagem" class="mensagem"></div>
+
+    <div class="colunas">
+
+      <div class="card">
+        <h2>GOLEIROS</h2>
+        <ul id="lista-GOLEIROS"></ul>
+      </div>
+
+      <div class="card">
+        <h2>ZAGUEIROS</h2>
+        <ul id="lista-ZAGUEIROS"></ul>
+      </div>
+
+      <div class="card">
+        <h2>LATERAIS</h2>
+        <ul id="lista-LATERAIS"></ul>
+      </div>
+
+      <div class="card">
+        <h2>MEIAS</h2>
+        <ul id="lista-MEIAS"></ul>
+      </div>
+
+      <div class="card">
+        <h2>ATACANTES</h2>
+        <ul id="lista-ATACANTES"></ul>
+      </div>
+
+      <div class="card">
+        <h2>TÉCNICO</h2>
+        <ul id="lista-TÉCNICO"></ul>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+
+    const dados = {
+      "GOLEIROS": [],
+      "ZAGUEIROS": [],
+      "LATERAIS": [],
+      "MEIAS": [],
+      "ATACANTES": [],
+      "TÉCNICO": []
+    };
+
+    function inserirJogador(){
+
+      const categoria = document.getElementById("categoria").value;
+      const nomeInput = document.getElementById("nome");
+      const mensagem = document.getElementById("mensagem");
+
+      let nome = nomeInput.value.trim();
+
+      if(nome === ""){
+        mensagem.innerHTML = "Digite um nome válido.";
+        mensagem.className = "mensagem erro";
+        return;
+      }
+
+      // Verifica duplicidade ignorando maiúsculas/minúsculas
+      const nomeExiste = dados[categoria].some(
+        jogador => jogador.toLowerCase() === nome.toLowerCase()
+      );
+
+      if(nomeExiste){
+        mensagem.innerHTML = `O nome "${nome}" já foi inserido em ${categoria}.`;
+        mensagem.className = "mensagem erro";
+        return;
+      }
+
+      // Adiciona o nome
+      dados[categoria].push(nome);
+
+      mensagem.innerHTML = `${nome} inserido com sucesso em ${categoria}.`;
+      mensagem.className = "mensagem sucesso";
+
+      nomeInput.value = "";
+
+      atualizarTela();
+    }
+
+    function atualizarTela(){
+
+      for(let categoria in dados){
+
+        const lista = document.getElementById(`lista-${categoria}`);
+
+        lista.innerHTML = "";
+
+        dados[categoria].forEach(nome => {
+
+          const li = document.createElement("li");
+          li.textContent = nome;
+
+          lista.appendChild(li);
+
+        });
+      }
+    }
+
+  </script>
+
+</body>
+</html>
